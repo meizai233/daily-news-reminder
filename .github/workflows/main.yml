@@ -1,0 +1,21 @@
+name: Daily News
+
+on:
+  schedule:
+    - cron: "0 23 * * *" # 北京时间早上 7 点
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - run: npm install node-fetch nodemailer
+      - run: node scripts/send-news.mjs
+        env:
+          MAIL_USER: ${{ secrets.MAIL_USER }}
+          MAIL_PASS: ${{ secrets.MAIL_PASS }}
+          MAIL_TO: ${{ secrets.MAIL_TO }}
